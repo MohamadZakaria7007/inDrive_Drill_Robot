@@ -6,11 +6,15 @@ Resource            api_session.resource
 
 *** Keywords ***
 Login
+    [Documentation]    Logs at WARN only: the VAR assignment and RequestsLibrary's request log
+    ...    would otherwise write the password into log.html and the CI artifact.
     [Arguments]    ${email}    ${password}    ${expected_status}=200
+    ${previous_level}    Set Log Level    WARN
     VAR    &{credentials}    email=${email}    password=${password}
     ${response}    POST On Session    anonymous    /users/login    json=${credentials}
     ...    expected_status=${expected_status}
     RETURN    ${response}
+    [Teardown]    Set Log Level    ${previous_level}
 
 Skip Without Demo Credentials
     [Documentation]    Suite Setup guard: a visible SKIP with the reason, not a confusing 401.
