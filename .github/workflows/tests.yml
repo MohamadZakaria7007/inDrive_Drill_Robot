@@ -49,6 +49,9 @@ jobs:
 
   ui:
     name: UI tests
+    # Manual only: practicesoftwaretesting.com is behind Cloudflare, and GitHub runners get its
+    # "Just a moment..." bot check (run 43175203341). UI runs locally; see README.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest   # Chrome is preinstalled; Selenium Manager fetches the driver
     timeout-minutes: 20
     steps:

@@ -30,6 +30,12 @@ robocop check . && robocop format --check .              # lint
 
 ## CI
 
-Two jobs: "Unit + API tests" and "UI tests". The UI host sits behind Cloudflare, so GitHub-hosted
-runners may get a bot check instead of the app; a failing UI test prints
-`Page at failure: <url> | title: <title>` in the log to make that visible.
+Two jobs: "Unit + API tests" runs on every push. "UI tests" is **manual only** (Actions > tests >
+Run workflow): the UI host is behind Cloudflare and GitHub-hosted runners get its
+"Just a moment..." bot check instead of the app (every UI test logged
+`Page at failure: ... | title: Just a moment...`). That is the environment, not the tests, and we
+don't bypass bot protection: UI runs locally, or in CI against a copy of the app we control
+(the app is open source and ships a docker-compose setup).
+
+The login suite needs repository secrets `CUSTOMER_EMAIL` / `CUSTOMER_PASSWORD` (the published
+demo customer); without them it is reported as SKIPPED with that reason.

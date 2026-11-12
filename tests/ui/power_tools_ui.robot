@@ -58,6 +58,20 @@ U3 Sorting By Price Low To High Reorders The Grid
     # The grid re-renders after a new API call: retry the assertion, never sleep.
     Wait Until Keyword Succeeds    10s    250ms    Displayed Prices Should Be Ascending
 
+U4 Filtering By Sander Shows Only Sanders
+    ${category_ids}    Get Category Ids By Slug    power-tools
+    ${response}    Search Products    by_category=${category_ids}
+    ${expected_sanders}    Evaluate
+    ...    sorted(p["name"] for p in $response.json()["data"] if p["category"]["slug"] == "sander")
+    Should Not Be Empty    ${expected_sanders}    msg=Seed data has no sanders: test would prove nothing
+    Open Category Page    power-tools    ${POWER_TOOLS_TITLE}
+    Wait For Product Count    ${SEEDED_POWER_TOOLS}
+
+    Filter By Subcategory    Sander
+
+    Wait Until Keyword Succeeds    10s    250ms
+    ...    Displayed Product Names Should Be    ${expected_sanders}
+
 U6 Prices Are Shown As Currency With Two Decimals
     [Documentation]    Expected "$46.50"; the page shows the raw API number "$46.5".
     [Tags]    known-bug
@@ -70,6 +84,11 @@ U6 Prices Are Shown As Currency With Two Decimals
 
 
 *** Keywords ***
+Displayed Product Names Should Be
+    [Arguments]    ${expected_names}
+    ${names}    Get Product Names
+    Lists Should Be Equal    ${names}    ${expected_names}    ignore_order=True
+
 Displayed Prices Should Be Ascending
     ${prices}    Get Product Prices
     Length Should Be    ${prices}    ${SEEDED_POWER_TOOLS}
