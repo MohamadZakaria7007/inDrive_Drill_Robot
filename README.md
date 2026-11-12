@@ -11,6 +11,7 @@ cp .env.example .env            # public URLs are defaults; demo credentials onl
 python -m robot -A robot.args tests                      # everything -> results/log.html
 python -m robot -A robot.args -i api tests               # API only
 python -m robot -A robot.args -i ui --variable HEADLESS:False tests   # watch the browser
+python -m robot -A robot.args -i ui --variable HEADLESS:False --variable SELENIUM_SPEED:1.5s tests  # demo pace
 robocop check . && robocop format --check .              # lint
 ```
 

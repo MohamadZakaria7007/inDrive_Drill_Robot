@@ -31,6 +31,7 @@ Open App Browser
     END
     Open Browser    about:blank    ${BROWSER}    options=${options}
     Set Selenium Timeout    ${SELENIUM_TIMEOUT}
+    Set Selenium Speed    ${SELENIUM_SPEED}
     Set Selenium Implicit Wait    0s    # never mix implicit and explicit waits
 
 Start Clean Session

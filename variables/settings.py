@@ -27,5 +27,7 @@ def get_variables() -> dict[str, object]:
         "BROWSER": _get("BROWSER", "chrome").lower(),
         "HEADLESS": _get("HEADLESS", "true").lower() == "true",
         "SELENIUM_TIMEOUT": _get("SELENIUM_TIMEOUT", "10s"),
+        # Demo/debug only: delay after every Selenium command (like Playwright's slow-mo).
+        "SELENIUM_SPEED": _get("SELENIUM_SPEED", "0s"),
         "API_TIMEOUT": float(_get("API_TIMEOUT_SECONDS", "15")),
     }
