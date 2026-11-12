@@ -1,0 +1,10 @@
+[tool.robocop.lint]
+# DOC01/DOC02 (missing [Documentation] on every keyword / test): names are the documentation
+# here; suites and non-obvious keywords are documented. Everything else stays on.
+ignore = ["DOC01", "DOC02"]
+# An end-to-end journey legitimately needs a few more steps than the default 10.
+configure = ["too-many-calls-in-test-case.max_calls=12"]
+
+[tool.robocop.format]
+# Keep data-driven test tables aligned in columns (readable as a table).
+configure = ["AlignTemplatedTestCases.enabled=True"]

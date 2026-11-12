@@ -1,0 +1,69 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+# Public values as repository variables, credentials as secrets (Settings > Secrets and variables).
+env:
+  UI_BASE_URL: ${{ vars.UI_BASE_URL || 'https://practicesoftwaretesting.com' }}
+  API_BASE_URL: ${{ vars.API_BASE_URL || 'https://api.practicesoftwaretesting.com' }}
+  CUSTOMER_EMAIL: ${{ secrets.CUSTOMER_EMAIL }}
+  CUSTOMER_PASSWORD: ${{ secrets.CUSTOMER_PASSWORD }}
+  HEADLESS: "true"
+
+# Two jobs on purpose: if only "UI tests" is red, the code is fine and the browser could not
+# reach the app. GitHub-hosted runners use datacenter IPs, and sites behind bot protection
+# (e.g. Cloudflare) answer them with a "Just a moment..." challenge. A failing UI test prints
+# "Page at failure: <url> | title: <title>" in this log, so the cause shows without downloads.
+# Never try to bypass a bot check: run UI tests locally or against a copy of the app you control.
+
+jobs:
+  api:
+    name: Unit + API tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Lint + format check
+        run: robocop check . && robocop format --check .
+      - name: Unit + API tests
+        run: python -m robot -A robot.args --runemptysuite -i unitORapi --outputdir results/api tests
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: api-results
+          path: results/
+          retention-days: 7
+
+  ui:
+    name: UI tests
+    runs-on: ubuntu-latest   # Chrome is preinstalled; Selenium Manager fetches the driver
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: UI tests
+        run: python -m robot -A robot.args --runemptysuite -i ui --outputdir results/ui tests
+      - name: Upload results and screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-results
+          path: results/
+          retention-days: 7

@@ -1,0 +1,9 @@
+# Pinned to the versions already installed on this machine (global Python 3.13).
+robotframework==7.2.2
+robotframework-seleniumlibrary==6.7.1
+selenium==4.30.0
+robotframework-requests==0.9.7
+requests==2.32.3
+jsonschema==4.23.0
+python-dotenv==1.2.2
+robotframework-robocop==8.3.2

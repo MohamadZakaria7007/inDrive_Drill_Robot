@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Paginated GET /products response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["current_page", "data", "from", "last_page", "per_page", "to", "total"],
+  "properties": {
+    "current_page": {"type": "integer", "minimum": 1},
+    "data": {"type": "array", "items": {"$ref": "product.json"}},
+    "from": {"type": ["integer", "null"]},
+    "last_page": {"type": "integer", "minimum": 1},
+    "per_page": {"type": "integer", "minimum": 1},
+    "to": {"type": ["integer", "null"]},
+    "total": {"type": "integer", "minimum": 0}
+  }
+}

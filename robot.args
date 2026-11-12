@@ -1,0 +1,4 @@
+--outputdir results
+--loglevel INFO
+--xunit xunit.xml
+--exclude wip

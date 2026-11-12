@@ -1,0 +1,5 @@
+# Normalise line endings: no CRLF warnings on Windows, LF in the repo
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.zip binary
